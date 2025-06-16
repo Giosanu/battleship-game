@@ -1,13 +1,20 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import 'src/theme/theme.config.ts';
+
+import React from 'react';
+import { Board } from './src/components/Board';
+import { SafeAreaView, StyleSheet } from 'react-native';
+import { UnistylesProvider } from 'react-native-unistyles';
+
 
 export default function App() {
   return (
-    <View style={styles.container}>
-      <Text>Open up App.tsx to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
-  );
+    <UnistylesProvider>
+      <SafeAreaView style={styles.container}>
+        <Board type="opponent" />
+        <Board type="player" />
+      </SafeAreaView>
+    </UnistylesProvider>
+  )
 }
 
 const styles = StyleSheet.create({
