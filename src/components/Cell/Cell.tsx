@@ -1,30 +1,62 @@
-import React from "react";
-import { View, Pressable, StyleSheet } from "react-native";
+import React from 'react';
+import { TouchableOpacity, View, Image } from 'react-native';
+import { useGameStore } from '@store/game/useGame';
 
-type Props = {
+import Miss from 'assets/markers/Miss small.png';
+import HitSmall from 'assets/markers/Hit small.png';
+import HitBig from 'assets/markers/Hit.png';
+import { TILE_SIZE } from 'src/constants/boardMetrics';
+import { BoardType, BoardTypes, MarkerTypes } from 'src/types/general';
+
+interface CellProps {
   row: number;
   col: number;
-};
+  type: BoardType;
+}
 
-export const Cell: React.FC<Props> = ({ row, col }) => {
+export const Cell = ({ row, col, type }: CellProps) => {
+  const fireShot = useGameStore(s => s.fireShot);
+  const isPlayerBoard = React.useMemo(() => type === BoardTypes.PLAYER, [type]);
+  const board = useGameStore(s =>
+    isPlayerBoard ? s.playerBoard : s.opponentBoard
+  );
+  const { getCellMarkerType } = useGameStore.getState();
+  const status = board[`${row}-${col}`];
+
   const handlePress = () => {
-    console.log(`Pressed cell at [${row}, ${col}]`);
+    if (!status && !isPlayerBoard) fireShot(row, col);
   };
 
+  const markerType = useGameStore(s => getCellMarkerType(row, col, type));
+
+  const getMarkerImage = () => {
+    switch (markerType) {
+      case MarkerTypes.HIT: return HitBig;
+      case MarkerTypes.HIT_SMALL: return HitSmall;
+      case MarkerTypes.MISS: return Miss;
+      default: return null;
+    }
+  };
+
+  const marker = getMarkerImage();
+
   return (
-    <Pressable style={styles.cell} onPress={handlePress}>
-      <View />
-    </Pressable>
+    <TouchableOpacity onPress={handlePress}>
+      <View
+        style={{
+          width: TILE_SIZE,
+          height: TILE_SIZE,
+          borderWidth: .5,
+          borderColor: '#8AC7DB',
+          justifyContent: 'center',
+          alignItems: 'center',
+          backgroundColor: '#ADD8E6',
+        }}
+      >
+        {marker && (
+          <Image source={marker} style={{ width: TILE_SIZE, height: TILE_SIZE }} resizeMode="contain" />
+        )}
+      </View>
+    </TouchableOpacity>
   );
 };
-
-const styles = StyleSheet.create({
-  cell: {
-    width: 30,
-    height: 30,
-    margin: 1,
-    backgroundColor: "#ddd",
-    borderWidth: 1,
-    borderColor: "#aaa",
-  },
-});
