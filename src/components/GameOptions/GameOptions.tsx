@@ -11,7 +11,7 @@ export const GameStatusPanel = () => {
   const opponentDestroyedShips = useGameStore(s => s.opponentDestroyedShips as Array<keyof typeof shipImages>);
 
   return (
-    <View style={{ padding: 16 }}>
+    <View>
       <Text style={{ fontSize: 12 }}>Game Status: {gameStatus}</Text>
       <Text style={{ fontSize: 12 }}>Game Strategy: {gameDifficulty === GameDifficulties.EASY ? 'Random' : 'Closest to hit'}</Text>
       <Text style={{ fontSize: 12  }}>Ships Destroyed: {opponentDestroyedShips.length}/5</Text>

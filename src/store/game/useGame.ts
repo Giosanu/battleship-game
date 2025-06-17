@@ -21,8 +21,6 @@ export const useGameStore = create<GameState>((set, get) => ({
   fireShot: (row, col) => {
     const { currentTurn, opponentLayout, opponentBoard, playerDestroyedShips, playerLayout, opponentDestroyedShips } = get();
     const key = `${row}-${col}`;
-
-    console.log(playerDestroyedShips,'playerDestroyedShips');
   
     if (currentTurn !== BoardTypes.PLAYER || opponentBoard[key]) return;
   
